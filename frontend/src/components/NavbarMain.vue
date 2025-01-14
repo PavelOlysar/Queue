@@ -21,11 +21,28 @@
       </ul>
     </div>
     <div class="navbar-end">
-      <a class="btn btn-secondary">Restart</a>
+      <button class="btn btn-secondary" @click="resetData">Restart</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useLocations } from '@/composables/useLocations'
 
+const { fetchLocations } = useLocations()
+
+const resetData = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/locations/reset', {
+      method: 'POST',
+    })
+    if (!response.ok) {
+      throw new Error('Failed to reset data')
+    }
+    await fetchLocations()
+    window.location.reload()
+  } catch (error) {
+    console.error('Error resetting data:', error)
+  }
+}
 </script>

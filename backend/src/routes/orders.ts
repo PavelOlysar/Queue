@@ -2,26 +2,25 @@ import { Hono } from 'hono';
 
 const orders = new Hono();
 
-// Sample data
-const ordersData = [
-  { id: 1, locationId: 1, description: 'Order 1', status: 'ordered' },
-  { id: 2, locationId: 1, description: 'Order 2', status: 'prepared' },
-  { id: 3, locationId: 2, description: 'Order 3', status: 'finished' },
-];
+import type { Order } from '../types.ts';
 
-// Routes for orders
+const ordersData: Order[] = [];
+const initialOrdersData: Order[] = [];
+
 orders.get('/', (c) => {
   return c.json(ordersData);
 });
 
-orders.get('/:id', (c) => {
-  const id = parseInt(c.req.param('id'));
-  const order = ordersData.find((ord) => ord.id === id);
-  if (order) {
-    return c.json(order);
-  } else {
-    return c.notFound();
-  }
+orders.post('/', async (c) => {});
+
+orders.put('/:id', async (c) => {});
+
+orders.delete('/:id', async (c) => {});
+
+orders.post('/reset', (c) => {
+  ordersData.length = 0;
+  ordersData.push(...initialOrdersData);
+  return c.json({ message: 'Data reset' });
 });
 
 export default orders;

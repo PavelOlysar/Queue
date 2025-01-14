@@ -5,6 +5,7 @@ const locations = new Hono();
 import type { Location } from '../types.ts';
 
 const locationsData: Location[] = [];
+const initialLocationsData: Location[] = [];
 
 locations.get('/', (c) => {
   return c.json(locationsData);
@@ -39,6 +40,12 @@ locations.delete('/:id', async (c) => {
   }
   locationsData.splice(index, 1);
   return c.json({ message: 'Location deleted' });
+});
+
+locations.post('/reset', (c) => {
+  locationsData.length = 0;
+  locationsData.push(...initialLocationsData);
+  return c.json({ message: 'Data reset' });
 });
 
 export default locations;

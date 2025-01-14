@@ -6,6 +6,12 @@
         <div class="flex gap-4 justify-between items-center w-full bg-base-200 p-4">
           <h3 class="text-2xl font-bold p-3">{{ location.name }}</h3>
           <div class="flex gap-4 items-center">
+            <input v-if="admin" type="text" placeholder="Order description..."
+              class="input input-bordered w-full max-w-xs">
+            <button class="btn btn-primary" v-if="admin">Add Order
+            </button>
+          </div>
+          <div class="flex gap-4 items-center">
             <input v-if="admin" v-model="location.newName" type="text" placeholder="New location name..."
               class="input input-bordered w-full max-w-xs">
             <button class="btn btn-warning" v-if="admin"
