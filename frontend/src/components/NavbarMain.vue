@@ -44,5 +44,16 @@ const resetData = async () => {
   } catch (error) {
     console.error('Error resetting data:', error)
   }
+
+  try {
+    const response = await fetch('http://localhost:3000/orders/reset', {
+      method: 'POST',
+    })
+    if (!response.ok) {
+      throw new Error('Failed to reset data')
+    }
+  } catch (error) {
+    console.error('Error resetting data:', error)
+  }
 }
 </script>

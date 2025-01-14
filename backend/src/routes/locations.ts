@@ -1,21 +1,23 @@
 import { Hono } from 'hono';
+import type { Location } from '../types.ts';
+import { locationsData, ordersData } from '../data';
 
 const locations = new Hono();
 
-import type { Location } from '../types.ts';
-
-const locationsData: Location[] = [];
-const initialLocationsData: Location[] = [];
-
 locations.get('/', (c) => {
-  return c.json(locationsData);
+  const locationsWithOrders = locationsData.map((location) => ({
+    ...location,
+    orders: ordersData.filter((order) => order.locationId === location.id),
+  }));
+  return c.json(locationsWithOrders);
 });
 
 locations.post('/', async (c) => {
   const { name } = await c.req.json();
-  const newLocation = {
+  const newLocation: Location = {
     id: locationsData.length + 1,
     name,
+    orders: [],
   };
   locationsData.push(newLocation);
   return c.json(newLocation, 201);
@@ -38,13 +40,22 @@ locations.delete('/:id', async (c) => {
   if (index === -1) {
     return c.json({ message: 'Location not found' }, 404);
   }
+
+  const ordersToDelete = ordersData.filter((order) => order.locationId === id);
+  ordersToDelete.forEach((order) => {
+    const orderIndex = ordersData.findIndex((o) => o.id === order.id);
+    if (orderIndex !== -1) {
+      ordersData.splice(orderIndex, 1);
+    }
+  });
+
   locationsData.splice(index, 1);
-  return c.json({ message: 'Location deleted' });
+  return c.json({ message: 'Location and associated orders deleted' });
 });
 
 locations.post('/reset', (c) => {
   locationsData.length = 0;
-  locationsData.push(...initialLocationsData);
+  ordersData.length = 0;
   return c.json({ message: 'Data reset' });
 });
 

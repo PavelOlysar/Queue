@@ -19,9 +19,9 @@ export function useLocations() {
         .map((location: Location) => ({
           ...location,
           orders: location.orders || [],
-          newName: '', // Initialize newName as an empty string
+          newName: '',
         }))
-        .sort((a: Location, b: Location) => b.id - a.id) // Sort by id in descending order
+        .sort((a: Location, b: Location) => b.id - a.id)
     } catch (err) {
       if (err instanceof Error) {
         error.value = err.message
