@@ -6,6 +6,9 @@ export interface Order {
 }
 
 export interface Location {
+  id: number
   name: string
+  newName?: string
+  error?: string | null
   orders: Order[]
 }
