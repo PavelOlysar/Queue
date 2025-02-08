@@ -6,14 +6,26 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import HeaderMain from '@/components/HeaderMain.vue'
 import LocationList from '@/components/LocationList.vue'
 import { useLocations } from '@/composables/useLocations'
 
 const { locations, fetchLocations } = useLocations()
 
+let intervalId: number
+
 onMounted(() => {
   fetchLocations()
+
+  intervalId = setInterval(() => {
+    fetchLocations()
+  }, 3000)
+})
+
+onUnmounted(() => {
+  if (intervalId) {
+    clearInterval(intervalId)
+  }
 })
 </script>
